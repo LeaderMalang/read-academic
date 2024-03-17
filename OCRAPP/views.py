@@ -218,7 +218,9 @@ def login(request):
                 return redirect(reverse('app_admin'))
             else:
                 return redirect(reverse('index'))
-        else:
+        elif user is not None and not user.is_active:
+            return render(request, 'Login.html', {'error': "Your admin request is in processing. Please wait for approval."})
+        elif user is None:
             return render(request, 'Login.html', {'error': "Invalid username or password"})
     else:
         return render(request, 'Login.html')
@@ -233,6 +235,7 @@ def signup(request):
         fullname = request.POST.get('fullname')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        is_superuser = request.POST.get('is_superuser')
         
         if User.objects.filter(email=email).exists():
             return render(request, 'Signup.html', {'error': 'User with this email already exists'})
@@ -240,6 +243,9 @@ def signup(request):
         user = User.objects.create_user(username=email, email=email, password=password)
         user.first_name = fullname.split()[0] 
         user.last_name = ' '.join(fullname.split()[1:]) 
+        user.is_superuser = True if is_superuser else False
+        user.is_staff = True if is_superuser else False
+        user.is_active = False if is_superuser else False
         user.save()
 
         return redirect('/login/') 

@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Matric (models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=105)
     date_of_birth = models.CharField(max_length=100)
     student_name = models.CharField(max_length=100)
     father_name = models.CharField(max_length=100,null=True)

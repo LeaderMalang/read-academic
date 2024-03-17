@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - Abasyn University</title>
+    <link rel="stylesheet" href="/static/SignUp.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/Images/ocr.png" type="/static/Images/ocr.png" sizes="10x10">
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <div class="logged_in_container">
+        <div class="logged_in_badge" role="alert">
+            You are already logged in |
+            {{user}}
+        </div>
+
+        <form method="post" action="/logout/">
+            {% csrf_token %}
+            <input type="submit" value="Logout" class="logout_btn">
+        </form>
+    </div>
+    {% endif %}
+
+
+    <div class="container">
+        <input type="checkbox" id="flip">
+        <div class="cover">
+            <div class="front">
+                <img src="/static/Images/download.jpg" alt="">
+                <div class="text">
+                    <span class="text-1">Abasyn University</span>
+                    <span class="text-2">Sign Up</span>
+                </div>
+            </div>
+        </div>
+        <div class="forms">
+            <div class="form-content">
+                <div class="signup-form">
+                    <a href="index.html"> <img src="/static/Images/abasy-uni-logo.png" alt="" width="100px"
+                            height="100px" style="margin-top: -200px;"></a>
+                    <div class="title">Sign Up</div>
+                    <form method="post" action="{% url 'signup' %}">
+                        {% csrf_token %}
+                        <div class="input-boxes">
+                            <div class="enter-id">Full Name</div>
+                            <input type="text" name="fullname" required>
+                            <div class="enter-id" style="margin-top: 10px;">Email</div>
+                            <input type="email" name="email" required>
+                            <div class="enter-id" style="margin-top: 10px;">Password</div>
+                            <input type="password" name="password" required>
+                            <div class="button input-box">
+                                <input type="submit" value="Sign Up" class="submit-btn">
+                            </div>
+                            {% if error %}
+                            <div class="error">{{ error }}</div>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Abasyn - University</title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/Images/ocr.png" type="/static/Images/ocr.png" sizes="16x16">
+</head>
+
+<body>
+    {% if error %}
+    <p class="error">Error: {{ error }}</p>
+    {% else %}
+    {% if records %}
+    <h1>Records</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Student Name</th>
+                <th>Father Name</th>
+                <th>Email Address</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Board</th>
+                <th>Total Marks</th>
+                <th>Obtained Marks</th>
+                <th>Percentage</th>
+                <th>Roll No</th>
+                <th>FSC Board</th>
+                <th>FSC Roll No</th>
+                <th>FSC Total Marks</th>
+                <th>FSC Obtained Marks</th>
+                <th>FSC Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+            <tr>
+                <td>{{ record.name }}</td>
+                <td>{{ record.date_of_birth }}</td>
+                <td>{{ record.student_name }}</td>
+                <td>{{ record.father_name }}</td>
+                <td>{{ record.email_address }}</td>
+                <td>{{ record.address }}</td>
+                <td>{{ record.phone_number }}</td>
+                <td>{{ record.board }}</td>
+                <td>{{ record.total_marks }}</td>
+                <td>{{ record.obtained_marks }}</td>
+                <td>{{ record.percentage }}</td>
+                <td>{{ record.roll_no }}</td>
+                <td>{{ record.fsc_board }}</td>
+                <td>{{ record.fsc_roll_no }}</td>
+                <td>{{ record.fsc_total_marks }}</td>
+                <td>{{ record.fsc_obtained_marks }}</td>
+                <td>{{ record.fsc_percentage }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No records found.</p>
+    {% endif %}
+    {% endif %}
+</body>
+
+</html>

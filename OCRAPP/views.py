@@ -243,11 +243,12 @@ def signup(request):
         user = User.objects.create_user(username=email, email=email, password=password)
         user.first_name = fullname.split()[0] 
         user.last_name = ' '.join(fullname.split()[1:]) 
+        # 
         user.is_superuser = True if is_superuser else False
         user.is_staff = True if is_superuser else False
         user.is_active = False if is_superuser else True
         user.save()
-
+    
         return redirect('/login/') 
     else:
         return render(request, 'Signup.html')

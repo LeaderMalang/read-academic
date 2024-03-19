@@ -245,7 +245,7 @@ def signup(request):
         user.last_name = ' '.join(fullname.split()[1:]) 
         user.is_superuser = True if is_superuser else False
         user.is_staff = True if is_superuser else False
-        user.is_active = False if is_superuser else False
+        user.is_active = False if is_superuser else True
         user.save()
 
         return redirect('/login/') 

@@ -7,64 +7,115 @@
     <link rel="stylesheet" href="/static/admin.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="static/Images/ocr.png" type="/static/Images/ocr.png" sizes="16x16">
+    <style>
+        body{
+            max-width: 95%;
+            margin: auto;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        th{
+            font-size: 15px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        thead {
+            background-color: #4F7942;
+        }
+        
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        
+    </style>
 </head>
 
 <body>
     {% if error %}
     <p class="error">Error: {{ error }}</p>
-    {% else %}
+{% else %}
     {% if records %}
-    <h1>Records</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Date of Birth</th>
-                <th>Student Name</th>
-                <th>Father Name</th>
-                <th>Email Address</th>
-                <th>Address</th>
-                <th>Phone Number</th>
-                <th>Board</th>
-                <th>Total Marks</th>
-                <th>Obtained Marks</th>
-                <th>Percentage</th>
-                <th>Roll No</th>
-                <th>FSC Board</th>
-                <th>FSC Roll No</th>
-                <th>FSC Total Marks</th>
-                <th>FSC Obtained Marks</th>
-                <th>FSC Percentage</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in records %}
-            <tr>
-                <td>{{ record.name }}</td>
-                <td>{{ record.date_of_birth }}</td>
-                <td>{{ record.student_name }}</td>
-                <td>{{ record.father_name }}</td>
-                <td>{{ record.email_address }}</td>
-                <td>{{ record.address }}</td>
-                <td>{{ record.phone_number }}</td>
-                <td>{{ record.board }}</td>
-                <td>{{ record.total_marks }}</td>
-                <td>{{ record.obtained_marks }}</td>
-                <td>{{ record.percentage }}</td>
-                <td>{{ record.roll_no }}</td>
-                <td>{{ record.fsc_board }}</td>
-                <td>{{ record.fsc_roll_no }}</td>
-                <td>{{ record.fsc_total_marks }}</td>
-                <td>{{ record.fsc_obtained_marks }}</td>
-                <td>{{ record.fsc_percentage }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <h1>Records</h1>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Date of Birth</th>
+                        <th>Student Name</th>
+                        <th>Father Name</th>
+                        <th>Email Address</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th>Board</th>
+                        <th>Total Marks</th>
+                        <th>Obtained Marks</th>
+                        <th>Percentage</th>
+                        <th>Roll No</th>
+                        <th>FSC Board</th>
+                        <th>FSC Roll No</th>
+                        <th>FSC Total Marks</th>
+                        <th>FSC Obtained Marks</th>
+                        <th>FSC Percentage</th>
+                        <th>CGPA</th>
+                        <th>UNIVERSITY PROGRAM</th>
+                        <th>UNIVERSITY YEAR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                        <tr>
+                            <td>{{ record.name }}</td>
+                            <td>{{ record.date_of_birth }}</td>
+                            <td>{{ record.student_name }}</td>
+                            <td>{{ record.father_name }}</td>
+                            <td>{{ record.email_address }}</td>
+                            <td>{{ record.address }}</td>
+                            <td>{{ record.phone_number }}</td>
+                            <td>{{ record.board }}</td>
+                            <td>{{ record.total_marks }}</td>
+                            <td>{{ record.obtained_marks }}</td>
+                            <td>{{ record.percentage }}</td>
+                            <td>{{ record.roll_no }}</td>
+                            <td>{{ record.fsc_board }}</td>
+                            <td>{{ record.fsc_roll_no }}</td>
+                            <td>{{ record.fsc_total_marks }}</td>
+                            <td>{{ record.fsc_obtained_marks }}</td>
+                            <td>{{ record.fsc_percentage }}</td>
+                            <td>{{ record.cgpa }}</td>
+                            <td>{{ record.university_master_program }}</td>
+                            <td>{{ record.year }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-    <p>No records found.</p>
+        <p>No records found.</p>
     {% endif %}
-    {% endif %}
+{% endif %}
+
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 import os
+from django.http import HttpResponse
 import time
 import easyocr
 from django.urls import reverse
@@ -7,6 +8,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from concurrent.futures import ThreadPoolExecutor
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
+import easyocr
+import cv2
 from django.contrib.auth.decorators import login_required
 
 
@@ -24,6 +27,121 @@ from .utils.calculatePercentage import calculate_percentage
 from .utils.createURL import create_url
 # ------------------------------------------------------------------------
 
+# @login_required(login_url='/login/')
+# def index(request):
+#     if request.method == "POST":
+#         try:
+#             # for testing only
+#             start_time = time.time() 
+            
+#             # ------------------------------- 
+#             # Get files from request
+#             ID_CARD_FILE = request.FILES.get('idCard')
+#             MATRIC_SANAT_FILE = request.FILES.get('matricSanat')
+#             FSC_SANAT_FILE = request.FILES.get('fscSanat')
+
+
+            
+#             # ------------------------------- 
+#             # Initiallize all variables
+#             idCard_number = None
+#             matric_total_marks = None
+#             matric_obtained_marks = None
+#             matric_percentage = None
+#             student_name = None
+#             father_name = None
+#             date_of_birth = None
+#             martic_roll_no = None
+#             martic_board = None
+#             fsc_total_marks = None
+#             fsc_obtained_marks = None
+#             fsc_percentage = None
+#             fsc_board = None
+#             fsc_roll_no = None
+            
+            
+            
+#             # ------------------------------- 
+#             # Load easy ocr model
+#             ocr_reader = easyocr.Reader(['en'])
+#             print("> Model loaded")
+
+
+
+#             # ------------------------------- 
+#             # Check if the 'uploads' directory exists 
+#             # Create the 'uploads' directory if it not exists
+#             uploads_dir = os.path.join(settings.BASE_DIR, 'uploads')
+#             os.makedirs(uploads_dir, exist_ok=True)
+#             print(">> Directory confirmed")
+
+
+
+#             # ------------------------------- 
+#             # Save the file to the 'uploads' directory
+#             # Scan files and get scanned text
+#             with ThreadPoolExecutor(max_workers=None) as executor:
+#                 if ID_CARD_FILE:
+#                     future_id_card = executor.submit(process_file, uploads_dir, ID_CARD_FILE, ocr_reader)
+
+#                 if MATRIC_SANAT_FILE:
+#                     future_matric_sanat = executor.submit(process_file, uploads_dir, MATRIC_SANAT_FILE, ocr_reader)
+
+#                 if FSC_SANAT_FILE:
+#                     future_fsc_sanat = executor.submit(process_file, uploads_dir, FSC_SANAT_FILE, ocr_reader)
+
+#                 # scanned files data
+#                 SCANNED_ID_CARD = future_id_card.result() if ID_CARD_FILE else None
+#                 SCANNED_MATRIC_SANAT = future_matric_sanat.result() if MATRIC_SANAT_FILE else None
+#                 SCANNED_FSC_SANAT = future_fsc_sanat.result() if FSC_SANAT_FILE else None
+
+#             # ------------------------------- 
+#             # Extract data from scanned text
+#             ## Matric Values
+#             matric_data = extract_matric_data(SCANNED_MATRIC_SANAT)
+#             martic_board = matric_data["board"] # matric board
+#             martic_roll_no = matric_data["roll_no"] # matric roll
+#             matric_total_marks = matric_data["total_marks"] # matric total marks
+#             matric_obtained_marks = matric_data["obtained_marks"] # matric obtained marks
+#             matric_percentage = calculate_percentage(matric_total_marks, matric_obtained_marks) # matric percentage
+
+#             ## FSC Values
+#             fsc_data = extract_fsc_data(SCANNED_FSC_SANAT)
+#             fsc_board = fsc_data["board"] # fsc board
+#             fsc_roll_no = fsc_data["roll_no"] # fsc roll
+#             fsc_total_marks = fsc_data["total_marks"] # fsc total marks
+#             fsc_obtained_marks = fsc_data["obtained_marks"] # fsc obtained marks
+#             fsc_percentage = calculate_percentage(fsc_total_marks, fsc_obtained_marks) # fsc percentage
+                
+#             ## Personal Values
+#             idCard_number = extract_idCard_no(SCANNED_ID_CARD) # id card no
+#             date_of_birth = extract_date_of_birth(SCANNED_MATRIC_SANAT) # dob
+#             student_name = matric_data["certified_name"] # student name
+#             father_name = matric_data["son_daughter_of"] # father name
+        
+#         except:
+#             print("\n\n---- AN ERROR OCCURED ----- \n\n")
+
+
+
+#         # ------------------------------- 
+#         # URL of the 'form' view 
+#         # Values as parameters
+#         form_url = create_url(idCard_number, matric_total_marks, matric_obtained_marks, matric_percentage, student_name, father_name, date_of_birth,  martic_roll_no, martic_board, fsc_total_marks, fsc_obtained_marks, fsc_percentage, fsc_board, fsc_roll_no)
+
+
+
+#         # for testing only
+#         print("\n\nTOTAL TIME TAKEN: ", int(time.time() - start_time), "seconds\n\n") 
+            
+            
+#         # ------------------------------- 
+#         # Redirect to the 'form' page 
+#         return redirect(form_url)
+            
+#     return render(request, "index.html")
+
+
 @login_required(login_url='/login/')
 def index(request):
     if request.method == "POST":
@@ -36,108 +154,140 @@ def index(request):
             ID_CARD_FILE = request.FILES.get('idCard')
             MATRIC_SANAT_FILE = request.FILES.get('matricSanat')
             FSC_SANAT_FILE = request.FILES.get('fscSanat')
+            CGPA = request.POST.get('cgpa')
+            UNI_MASTER_PROGRAM = request.POST.get('master_program')
+            UNI_YEAR = request.POST.get('user_year')
 
+            # Check if the 'uploads' directory exists 
+            # Create the 'uploads' directory if it does not exist
+            uploads_dir = os.path.join(settings.BASE_DIR, 'uploads')
+            os.makedirs(uploads_dir, exist_ok=True)
+            print(">> Directory confirmed")
 
+            # Save files to the 'uploads' directory
+            id_card_path = os.path.join(uploads_dir, ID_CARD_FILE.name)
+            with open(id_card_path, 'wb+') as destination:
+                for chunk in ID_CARD_FILE.chunks():
+                    destination.write(chunk)
+
+            matric_sanat_path = os.path.join(uploads_dir, MATRIC_SANAT_FILE.name)
+            with open(matric_sanat_path, 'wb+') as destination:
+                for chunk in MATRIC_SANAT_FILE.chunks():
+                    destination.write(chunk)
+
+            fsc_sanat_path = os.path.join(uploads_dir, FSC_SANAT_FILE.name)
+            with open(fsc_sanat_path, 'wb+') as destination:
+                for chunk in FSC_SANAT_FILE.chunks():
+                    destination.write(chunk)
             
-            # ------------------------------- 
-            # Initiallize all variables
-            idCard_number = None
+            # Initialize all variables
             matric_total_marks = None
             matric_obtained_marks = None
             matric_percentage = None
-            student_name = None
-            father_name = None
-            date_of_birth = None
             martic_roll_no = None
             martic_board = None
+
             fsc_total_marks = None
             fsc_obtained_marks = None
             fsc_percentage = None
             fsc_board = None
             fsc_roll_no = None
+
+            idCard_number = None
+            student_name = None
+            father_name = None
+            date_of_birth = None
+            cgpa = CGPA
+            uni_master_program = UNI_MASTER_PROGRAM
+            uni_year = UNI_YEAR
+            reader = easyocr.Reader(['en'], gpu=False)
+
+            # For Matric
+            matric_image = cv2.imread(matric_sanat_path)
+            if matric_image is None:
+                raise Exception("Matric image not found or could not be read")
+
+            matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
+            matric_result = reader.readtext(matric_image_rgb)
+            for index, detection in enumerate(matric_result):
+                text = detection[1]
+                if text.lower() == "roll no.":
+                    martic_roll_no = matric_result[index+1][1]
+                if text.lower() == "total":
+                    matric_total_marks = int(matric_result[index+1][1])
+                    matric_obtained_marks = int(matric_result[index+2][1])
+                if "islamabad" in text.lower():
+                    martic_board = "board of intermediate and secondary education Islamabad"
+
+            if matric_total_marks is not None and matric_total_marks != 0:
+                matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
+
+            # For FSC
+            fsc_image = cv2.imread(fsc_sanat_path)
+            if fsc_image is None:
+                raise Exception("FSC image not found or could not be read")
+
+            image_height, image_width, _ = fsc_image.shape
+            start_x = 0
+            start_y = (2 * image_height) // 3
+            roi_width = image_width
+            roi_height = image_height // 3
+
+            fsc_roi_image = fsc_image[start_y:start_y + roi_height, start_x:start_x + roi_width]
+            fsc_image_rgb = cv2.cvtColor(fsc_roi_image, cv2.COLOR_BGR2RGB)
+            fsc_result = reader.readtext(fsc_image_rgb)
+
+            for index, detection in enumerate(fsc_result):
+                text = detection[1]
+                if text.lower() == "total marks (in figures)":
+                    fsc_obtained_marks = int(fsc_result[index+1][1])
+                    fsc_total_marks = int(fsc_result[index+2][1])
+                if text.lower() == "total":
+                    fsc_total_marks = int(fsc_result[index+1][1])
+                    fsc_obtained_marks = int(fsc_result[index+2][1])
+                if "rawalpindi" in text.lower():
+                    fsc_board = "board of intermediate and secondary education rawalpindi"
+                if "islamabad" in text.lower():
+                    fsc_board = "board of intermediate and secondary education islamabad"
+
+            if fsc_total_marks is not None and fsc_total_marks != 0:
+                fsc_percentage = float((fsc_obtained_marks / fsc_total_marks) * 100)
+
+            # For ID Card
+            id_card_image = cv2.imread(id_card_path)
+            if id_card_image is None:
+                raise Exception("ID card image not found or could not be read")
+
+            id_card_image_rgb = cv2.cvtColor(id_card_image, cv2.COLOR_BGR2RGB)
+            id_card_result = reader.readtext(id_card_image_rgb)
+
+            for index, detection in enumerate(id_card_result):
+                text = detection[1]
+                if text.lower() == "identity number":
+                    idCard_number = id_card_result[index + 2][1]
+                if text.lower() == "identity number":
+                    date_of_birth = id_card_result[index + 3][1]
+                if text.lower() == "name":
+                    student_name = id_card_result[index + 1][1]
+                if text.lower() == "father name":
+                    father_name = id_card_result[index + 1][1]
+
+            # URL of the 'form' view 
+            # Values as parameters
             
+            form_url = create_url(idCard_number, matric_total_marks, matric_obtained_marks, matric_percentage, student_name, father_name, date_of_birth, martic_roll_no, martic_board, fsc_total_marks, fsc_obtained_marks, fsc_percentage, fsc_board, fsc_roll_no, cgpa, uni_master_program, uni_year)
+
+            # for testing only
+            print("\n\nTOTAL TIME TAKEN: ", int(time.time() - start_time), "seconds\n\n") 
+
+            # Redirect to the 'form' page 
+            return redirect(form_url)
             
-            
-            # ------------------------------- 
-            # Load easy ocr model
-            ocr_reader = easyocr.Reader(['en'])
-            print("> Model loaded")
-
-
-
-            # ------------------------------- 
-            # Check if the 'uploads' directory exists 
-            # Create the 'uploads' directory if it not exists
-            uploads_dir = os.path.join(settings.BASE_DIR, 'uploads')
-            os.makedirs(uploads_dir, exist_ok=True)
-            print(">> Directory confirmed")
-
-
-
-            # ------------------------------- 
-            # Save the file to the 'uploads' directory
-            # Scan files and get scanned text
-            with ThreadPoolExecutor(max_workers=None) as executor:
-                if ID_CARD_FILE:
-                    future_id_card = executor.submit(process_file, uploads_dir, ID_CARD_FILE, ocr_reader)
-
-                if MATRIC_SANAT_FILE:
-                    future_matric_sanat = executor.submit(process_file, uploads_dir, MATRIC_SANAT_FILE, ocr_reader)
-
-                if FSC_SANAT_FILE:
-                    future_fsc_sanat = executor.submit(process_file, uploads_dir, FSC_SANAT_FILE, ocr_reader)
-
-                # scanned files data
-                SCANNED_ID_CARD = future_id_card.result() if ID_CARD_FILE else None
-                SCANNED_MATRIC_SANAT = future_matric_sanat.result() if MATRIC_SANAT_FILE else None
-                SCANNED_FSC_SANAT = future_fsc_sanat.result() if FSC_SANAT_FILE else None
-
-            # ------------------------------- 
-            # Extract data from scanned text
-            ## Matric Values
-            matric_data = extract_matric_data(SCANNED_MATRIC_SANAT)
-            martic_board = matric_data["board"] # matric board
-            martic_roll_no = matric_data["roll_no"] # matric roll
-            matric_total_marks = matric_data["total_marks"] # matric total marks
-            matric_obtained_marks = matric_data["obtained_marks"] # matric obtained marks
-            matric_percentage = calculate_percentage(matric_total_marks, matric_obtained_marks) # matric percentage
-
-            ## FSC Values
-            fsc_data = extract_fsc_data(SCANNED_FSC_SANAT)
-            fsc_board = fsc_data["board"] # fsc board
-            fsc_roll_no = fsc_data["roll_no"] # fsc roll
-            fsc_total_marks = fsc_data["total_marks"] # fsc total marks
-            fsc_obtained_marks = fsc_data["obtained_marks"] # fsc obtained marks
-            fsc_percentage = calculate_percentage(fsc_total_marks, fsc_obtained_marks) # fsc percentage
-                
-            ## Personal Values
-            idCard_number = extract_idCard_no(SCANNED_ID_CARD) # id card no
-            date_of_birth = extract_date_of_birth(SCANNED_MATRIC_SANAT) # dob
-            student_name = matric_data["certified_name"] # student name
-            father_name = matric_data["son_daughter_of"] # father name
-        
-        except:
-            print("\n\n---- AN ERROR OCCURED ----- \n\n")
-
-
-
-        # ------------------------------- 
-        # URL of the 'form' view 
-        # Values as parameters
-        form_url = create_url(idCard_number, matric_total_marks, matric_obtained_marks, matric_percentage, student_name, father_name, date_of_birth,  martic_roll_no, martic_board, fsc_total_marks, fsc_obtained_marks, fsc_percentage, fsc_board, fsc_roll_no)
-
-
-
-        # for testing only
-        print("\n\nTOTAL TIME TAKEN: ", int(time.time() - start_time), "seconds\n\n") 
-            
-            
-        # ------------------------------- 
-        # Redirect to the 'form' page 
-        return redirect(form_url)
-            
+        except Exception as e:
+            error_message = str(e)
+            return HttpResponse(error_message)
+    
     return render(request, "index.html")
-
 # ------------------------------------------------------------------------
 
 @login_required(login_url='/login/')
@@ -156,7 +306,10 @@ def form(request):
     fsc_board = request.GET.get('fsc_board', None)
     fsc_roll_no = request.GET.get('fsc_roll_no', None)
     date_of_birth = request.GET.get('date_of_birth', None)
-
+    cgpa = request.GET.get('cgpa', None)
+    uni_master_program = request.GET.get('uni_master_program', None)
+    uni_year = request.GET.get('uni_year', None)
+    
     if request.method == 'POST':
         form_email_address = request.POST.get('email_address')
         form_address = request.POST.get('address')
@@ -181,14 +334,16 @@ def form(request):
         matric.fsc_obtained_marks = fsc_obtained_marks
         matric.fsc_percentage = fsc_percentage
         matric.fsc_board = fsc_board
-        matric.fsc_roll_no = fsc_roll_no
+        matric.cgpa = cgpa
+        matric.university_master_program = uni_master_program
+        matric.year = uni_year
         matric.save()
         return redirect('index')
    
 
     # Pass idCard_number to the template
     return render(request, "submit.html", {'idCard_number': idCard_number,'obtained_marks': obtained_marks, 'total_marks': total_marks, 
-                                           'percentage': percentage, 'student_name': student_name , 'father_name': father_name, 'roll_no': roll_no, 'board': board, 'fsc_total_marks': fsc_total_marks, 'fsc_obtained_marks': fsc_obtained_marks, 'fsc_percentage': fsc_percentage, 'fsc_board':fsc_board, 'fsc_roll_no': fsc_roll_no, 'birth_date': date_of_birth})
+                                           'percentage': percentage, 'student_name': student_name , 'father_name': father_name, 'roll_no': roll_no, 'board': board, 'fsc_total_marks': fsc_total_marks, 'fsc_obtained_marks': fsc_obtained_marks, 'fsc_percentage': fsc_percentage, 'fsc_board':fsc_board, 'fsc_roll_no': fsc_roll_no, 'birth_date': date_of_birth, 'cgpa':cgpa, 'university_master_program': uni_master_program, 'univeristy_year': uni_year})
 
 # ------------------------------------------------------------------------
 @login_required(login_url='/login/')

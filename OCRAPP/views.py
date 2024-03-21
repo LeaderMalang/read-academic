@@ -208,6 +208,71 @@ def matric_data_extraction(img_path):
     
     print("Job Done")
 
+def fsc_data_extraction(img_path):
+    global fsc_obtained_marks 
+    global fsc_total_marks 
+    global fsc_percentage 
+    global fsc_board
+    with lock: 
+        fsc_image = cv2.imread(img_path)
+        if fsc_image is None:
+            raise Exception("FSC image not found or could not be read")
+
+        image_height, image_width, _ = fsc_image.shape
+        start_x = 0
+        start_y = (2 * image_height) // 3
+        roi_width = image_width
+        roi_height = image_height // 3
+
+        fsc_roi_image = fsc_image[start_y:start_y + roi_height,start_x:start_x + roi_width]
+        fsc_image_rgb = cv2.cvtColor(fsc_roi_image, cv2.COLOR_BGR2RGB)
+        fsc_result = reader.readtext(fsc_image_rgb)
+
+        for index, detection in enumerate(fsc_result):
+            text = detection[1]
+            if text.lower() == "total marks (in figures)":
+                fsc_obtained_marks = int(fsc_result[index+1][1])
+                fsc_total_marks = int(fsc_result[index+2][1])
+            if text.lower() == "total":
+                fsc_total_marks = int(fsc_result[index+1][1])
+                fsc_obtained_marks = int(fsc_result[index+2][1])
+            if "rawalpindi" in text.lower():
+                fsc_board = "board of intermediate and secondary education rawalpindi"
+            if "islamabad" in text.lower():
+                fsc_board = "board of intermediate and secondary education islamabad"
+
+        if fsc_total_marks is not None and fsc_total_marks != 0:
+            fsc_percentage = float((fsc_obtained_marks / fsc_total_marks) * 100)
+    
+    print("Job Done")
+
+def id_card_data_extraction(img_path):
+    global idCard_number 
+    global date_of_birth 
+    global student_name 
+    global father_name
+    with lock: 
+        id_card_image = cv2.imread(img_path)
+        if id_card_image is None:
+            raise Exception("ID card image not found or could not be read")
+
+        id_card_image_rgb = cv2.cvtColor(id_card_image, cv2.COLOR_BGR2RGB)
+        id_card_result = reader.readtext(id_card_image_rgb)
+
+        for index, detection in enumerate(id_card_result):
+            text = detection[1]
+            print(text)
+            if text.lower() == "identity number":
+                idCard_number = id_card_result[index + 2][1]
+            if text.lower() == "identity number":
+                date_of_birth = id_card_result[index + 3][1]
+            if text.lower() == "name":
+                student_name = id_card_result[index + 1][1]
+            if text.lower() == "father name":
+                father_name = id_card_result[index + 1][1]
+    
+    print("Job Done")
+
 @login_required(login_url='/login/')
 def index(request):
     if request.method == "POST":
@@ -260,54 +325,17 @@ def index(request):
             matric_thread.join()
 
             # For FSC
-            fsc_image = cv2.imread(fsc_sanat_path)
-            if fsc_image is None:
-                raise Exception("FSC image not found or could not be read")
+            fsc_thread=threading.Thread(target=fsc_data_extraction,args=(fsc_sanat_path,))
+            fsc_thread.start()
+            # Wait until the thread completes
+            fsc_thread.join()
 
-            image_height, image_width, _ = fsc_image.shape
-            start_x = 0
-            start_y = (2 * image_height) // 3
-            roi_width = image_width
-            roi_height = image_height // 3
+            # For idCard
+            id_card_thread=threading.Thread(target=id_card_data_extraction,args=(id_card_path,))
+            id_card_thread.start()
+            # Wait until the thread completes
+            id_card_thread.join()
 
-            fsc_roi_image = fsc_image[start_y:start_y + roi_height, start_x:start_x + roi_width]
-            fsc_image_rgb = cv2.cvtColor(fsc_roi_image, cv2.COLOR_BGR2RGB)
-            fsc_result = reader.readtext(fsc_image_rgb)
-
-            for index, detection in enumerate(fsc_result):
-                text = detection[1]
-                if text.lower() == "total marks (in figures)":
-                    fsc_obtained_marks = int(fsc_result[index+1][1])
-                    fsc_total_marks = int(fsc_result[index+2][1])
-                if text.lower() == "total":
-                    fsc_total_marks = int(fsc_result[index+1][1])
-                    fsc_obtained_marks = int(fsc_result[index+2][1])
-                if "rawalpindi" in text.lower():
-                    fsc_board = "board of intermediate and secondary education rawalpindi"
-                if "islamabad" in text.lower():
-                    fsc_board = "board of intermediate and secondary education islamabad"
-
-            if fsc_total_marks is not None and fsc_total_marks != 0:
-                fsc_percentage = float((fsc_obtained_marks / fsc_total_marks) * 100)
-
-            # For ID Card
-            id_card_image = cv2.imread(id_card_path)
-            if id_card_image is None:
-                raise Exception("ID card image not found or could not be read")
-
-            id_card_image_rgb = cv2.cvtColor(id_card_image, cv2.COLOR_BGR2RGB)
-            id_card_result = reader.readtext(id_card_image_rgb)
-
-            for index, detection in enumerate(id_card_result):
-                text = detection[1]
-                if text.lower() == "identity number":
-                    idCard_number = id_card_result[index + 2][1]
-                if text.lower() == "identity number":
-                    date_of_birth = id_card_result[index + 3][1]
-                if text.lower() == "name":
-                    student_name = id_card_result[index + 1][1]
-                if text.lower() == "father name":
-                    father_name = id_card_result[index + 1][1]
 
             # URL of the 'form' view 
             # Values as parameters

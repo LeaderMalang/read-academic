@@ -137,12 +137,6 @@
                     <input type="text" name="fsc_board" value="{{ fsc_board }}" placeholder="Enter your Board" disabled>
                    
                 </div>
-            
-                <div class="field">
-                    <label for="birthDate">FSC Roll No:</label>
-                    <input type="text" name="fsc_roll_no" value="{{ fsc_roll_no }}" placeholder="Enter your Serial no/Roll no" disabled>
-                    
-                </div>
             </div>
 
 <!--2nd-->
@@ -179,9 +173,9 @@
                     
                 </div>
             </div>
-
+        {% if cgpa %}
         <header style="margin-top: 50px;">University Program.</header>
-        <hr class="hr">
+        <hr class="hr" style="margin-bottom: 30px;">
 
             <div class="dbl-field">
                 <div class="field">
@@ -202,16 +196,20 @@
                    
                 </div>
             </div>
+            {% endif %}
 
             <div class="button-area">
                <button type="submit">Submit</button>
-               
+               <button onclick="goBack()" type="button" style="margin-left: 10px;">Cancel</button>
             </div>
-        </form>
-       
-    
 
+        </form>
     </div>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </body>
 
 </html>

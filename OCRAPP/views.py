@@ -26,20 +26,35 @@ from .services.dateOfBirth import extract_date_of_birth
 from .utils.calculatePercentage import calculate_percentage
 from .utils.createURL import create_url
 import threading
+lock = threading.Lock()
 # ------------------------------------------------------------------------
 reader = easyocr.Reader(['en'], gpu=False)
 # Initialize all variables
-global matric_obtained_marks 
-global matric_total_marks 
-global matric_percentage 
-global martic_roll_no
-global martic_board 
+
+
+matric_total_marks=0
+matric_obtained_marks=0
+matric_percentage=0
+martic_roll_no=None
+martic_board=None
+
+global fsc_total_marks
+global fsc_obtained_marks
+global fsc_percentage
+global fsc_board
+global fsc_roll_no
 
 fsc_total_marks = None
 fsc_obtained_marks = None
 fsc_percentage = None
 fsc_board = None
 fsc_roll_no = None
+
+global idCard_number
+global student_name
+global father_name
+global date_of_birth
+
 
 idCard_number = None
 student_name = None
@@ -159,27 +174,37 @@ date_of_birth = None
             
 #     return render(request, "index.html")
 def matric_data_extraction(img_path):
-    
-    matric_image = cv2.imread(img_path)
-    if matric_image is None:
+    global matric_obtained_marks 
+    global matric_total_marks 
+    global matric_percentage 
+    global martic_roll_no
+    global martic_board
+    with lock: 
+        matric_image = cv2.imread(img_path)
+        if matric_image is None:
 
-        raise Exception("Matric image not found or could not be read")
-    matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
-    matric_result = reader.readtext(matric_image_rgb)
-    for index, detection in enumerate(matric_result):
-        text = detection[1]
-        if text.lower() == "roll no.":
-            martic_roll_no = matric_result[index+1][1]
-        if text.lower() == "total":
-            matric_total_marks = int(matric_result[index+1][1])
-            matric_obtained_marks = int(matric_result[index+2][1])
-        if "islamabad" in text.lower():
-            martic_board= "board of intermediate and secondary education Islamabad"
-        if "rawalpindi" in text.lower():
-            martic_board = "board of intermediate and secondary education rawalpindi"
+            raise Exception("Matric image not found or could not be read")
+        matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
+        matric_result = reader.readtext(matric_image_rgb)
+        for index, detection in enumerate(matric_result):
+            text = detection[1]
+            if text.lower() == "roll no":
+                martic_roll_no = matric_result[index+1][1]
+            if text.lower() == "roll no.":
+                martic_roll_no = matric_result[index+1][1]
+            if text.lower() == "marks (in figures)":
+                matric_obtained_marks = int(matric_result[index+1][1])
+                matric_total_marks = int(matric_result[index+2][1])
+            if text == "TOTAL":
+                matric_total_marks = int(matric_result[index+1][1])
+                matric_obtained_marks = int(matric_result[index+2][1])
+            if "islamabad" in text.lower():
+                martic_board= "board of intermediate and secondary education Islamabad"
+            if "rawalpindi" in text.lower():
+                martic_board = "board of intermediate and secondary education rawalpindi"
 
-    if matric_total_marks is not None and matric_total_marks != 0:
-        matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
+        if matric_total_marks is not None and matric_total_marks != 0:
+            matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
     
     print("Job Done")
 
@@ -231,6 +256,8 @@ def index(request):
             
             matric_thread=threading.Thread(target=matric_data_extraction,args=(matric_sanat_path,))
             matric_thread.start()
+            # Wait until the thread completes
+            matric_thread.join()
 
             # For FSC
             fsc_image = cv2.imread(fsc_sanat_path)

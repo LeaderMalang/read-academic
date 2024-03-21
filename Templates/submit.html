@@ -19,7 +19,7 @@
 <body>
 
     <div class="wrapper">
-        <a href="index.html"> <img src="static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px" style="margin-left: 30px;"></a>
+        <a href="/"> <img src="static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px" style="margin-left: 30px;"></a>
         <header>Matric Form.</header>
         <hr class="hr">
         <form style="margin-top: 30px;"  method="post">
@@ -179,7 +179,31 @@
                     
                 </div>
             </div>
-            <div  class="button-area">
+
+        <header style="margin-top: 50px;">University Program.</header>
+        <hr class="hr">
+
+            <div class="dbl-field">
+                <div class="field">
+                    <label for="uniCGPA">CGPA</label>
+                    <input type="text" name="cgpa" value="{{ cgpa }}" disabled>
+                   
+                </div>
+                <div class="field">
+                    <label for="uniProgram">University Master Program</label>
+                    <input type="text" name="uni_master_program" value="{{ university_master_program }}" disabled>
+                   
+                </div>
+            </div>
+            <div class="dbl-field">
+                <div class="field">
+                    <label for="uniYear">University Year</label>
+                    <input type="text" name="uni_year" value="{{ univeristy_year }}" disabled>
+                   
+                </div>
+            </div>
+
+            <div class="button-area">
                <button type="submit">Submit</button>
                
             </div>

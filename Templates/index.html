@@ -66,6 +66,52 @@
                                     <input type="file" name="fscSanat" id="fscSanat" onchange="updateFscSanatFileName()">
                                 </div>
                             </div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                            <label for="master" class="enter-id">Apply as a Master</label>
+                            <div class="">
+                                <input id="master" type="checkbox" onclick="toggleDivDisplay()">
+                            </div>
+                        </div>
+
+                        <div id="as_master_div_id" class="as_master_div" style="display: none;">
+
+                        <div>
+                        <div class=" enter-id" style="margin-top: 10px;">Enter CGPA.</div>
+                        <div class="file-upload" style="margin-top: 5px;">
+                        <input class="file-select" type="number" name="cgpa" id="cgpa" placeholder="Enter CGPA" style="width: 100%; padding-left: 10px;">
+                        </div>
+                        </div>
+
+                        <div>
+                        <div class=" enter-id" style="margin-top: 10px;">Enter University Master Program</div>
+                        <div class="file-upload" style="margin-top: 5px;">
+                        <input class="file-select" type="text" name="master_program" id="master_program" placeholder="Enter University Master Program" style="width: 100%; padding-left: 10px;">
+                        </div>
+                        </div>
+
+                        <div>
+                        <div class=" enter-id" style="margin-top: 10px;">Enter Year</div>
+                        <div class="file-upload" style="margin-top: 5px;">
+                        <input class="file-select" type="text" name="user_year" id="user_year" placeholder="Enter Year" style="width: 100%; padding: 0 10px;">
+                        </div>
+                        </div>
+
+                        </div>
+
+
+                        <script>
+                            function toggleDivDisplay() {
+                                var checkbox = document.getElementById("master");
+                                var asMasterDiv = document.getElementById("as_master_div_id");
+                        
+                                if (checkbox.checked) {
+                                    asMasterDiv.style.display = "block";
+                                } else {
+                                    asMasterDiv.style.display = "none";
+                                }
+                            }
+                        </script>
+
                             <!-- <div class=" enter-id" style="margin-top: 10px;">Choose your Bs Sanat.</div>
                             <div class="file-upload" style="margin-top: 5px;">
                                 <div class="file-select">

@@ -52,9 +52,12 @@
                             <input type="email" name="email" required>
                             <div class="enter-id" style="margin-top: 10px;">Password</div>
                             <input type="password" name="password" required>
+                            <div class="enter-id" style="margin-top: 10px;">Sign Up as Admin</div>
+                            <input type="checkbox" name="is_superuser" id="is_superuser">
                             <div class="button input-box">
                                 <input type="submit" value="Sign Up" class="submit-btn">
                             </div>
+                            <span>Already have an account</span> <a href="/login" style="color: black;"><b>login here</b></a>
                             {% if error %}
                             <div class="error">{{ error }}</div>
                             {% endif %}

@@ -25,8 +25,26 @@ from .services.dateOfBirth import extract_date_of_birth
 # import utils (utility functions)
 from .utils.calculatePercentage import calculate_percentage
 from .utils.createURL import create_url
+import threading
 # ------------------------------------------------------------------------
+reader = easyocr.Reader(['en'], gpu=False)
+# Initialize all variables
+global matric_obtained_marks 
+global matric_total_marks 
+global matric_percentage 
+global martic_roll_no
+global martic_board 
 
+fsc_total_marks = None
+fsc_obtained_marks = None
+fsc_percentage = None
+fsc_board = None
+fsc_roll_no = None
+
+idCard_number = None
+student_name = None
+father_name = None
+date_of_birth = None
 # @login_required(login_url='/login/')
 # def index(request):
 #     if request.method == "POST":
@@ -140,7 +158,30 @@ from .utils.createURL import create_url
 #         return redirect(form_url)
             
 #     return render(request, "index.html")
+def matric_data_extraction(img_path):
+    
+    matric_image = cv2.imread(img_path)
+    if matric_image is None:
 
+        raise Exception("Matric image not found or could not be read")
+    matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
+    matric_result = reader.readtext(matric_image_rgb)
+    for index, detection in enumerate(matric_result):
+        text = detection[1]
+        if text.lower() == "roll no.":
+            martic_roll_no = matric_result[index+1][1]
+        if text.lower() == "total":
+            matric_total_marks = int(matric_result[index+1][1])
+            matric_obtained_marks = int(matric_result[index+2][1])
+        if "islamabad" in text.lower():
+            martic_board= "board of intermediate and secondary education Islamabad"
+        if "rawalpindi" in text.lower():
+            martic_board = "board of intermediate and secondary education rawalpindi"
+
+    if matric_total_marks is not None and matric_total_marks != 0:
+        matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
+    
+    print("Job Done")
 
 @login_required(login_url='/login/')
 def index(request):
@@ -180,47 +221,16 @@ def index(request):
                 for chunk in FSC_SANAT_FILE.chunks():
                     destination.write(chunk)
             
-            # Initialize all variables
-            matric_total_marks = None
-            matric_obtained_marks = None
-            matric_percentage = None
-            martic_roll_no = None
-            martic_board = None
-
-            fsc_total_marks = None
-            fsc_obtained_marks = None
-            fsc_percentage = None
-            fsc_board = None
-            fsc_roll_no = None
-
-            idCard_number = None
-            student_name = None
-            father_name = None
-            date_of_birth = None
+            
             cgpa = CGPA
             uni_master_program = UNI_MASTER_PROGRAM
             uni_year = UNI_YEAR
-            reader = easyocr.Reader(['en'], gpu=False)
+            
 
             # For Matric
-            matric_image = cv2.imread(matric_sanat_path)
-            if matric_image is None:
-                raise Exception("Matric image not found or could not be read")
-
-            matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
-            matric_result = reader.readtext(matric_image_rgb)
-            for index, detection in enumerate(matric_result):
-                text = detection[1]
-                if text.lower() == "roll no.":
-                    martic_roll_no = matric_result[index+1][1]
-                if text.lower() == "total":
-                    matric_total_marks = int(matric_result[index+1][1])
-                    matric_obtained_marks = int(matric_result[index+2][1])
-                if "islamabad" in text.lower():
-                    martic_board = "board of intermediate and secondary education Islamabad"
-
-            if matric_total_marks is not None and matric_total_marks != 0:
-                matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
+            
+            matric_thread=threading.Thread(target=matric_data_extraction,args=(matric_sanat_path,))
+            matric_thread.start()
 
             # For FSC
             fsc_image = cv2.imread(fsc_sanat_path)

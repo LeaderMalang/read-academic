@@ -19,27 +19,26 @@
 <body>
 
     <div class="wrapper">
-        <div style="display: flex; align-items: center; gap: 30px;">
-        <a href="/"> <img src="static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px" style="margin-left: 30px;"></a>
-        <div class="button-area">
-            <button type="button" style="margin-left: 10px; font-size: 15px !important; cursor: pointer; border-radius: 5px; padding: 10px 30px;"><a href="/logout" style="text-decoration: none; color: white;">Logout</a></button>
-        </div>
-        </div>
+        <a href="/"> <img src="static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px"
+                style="margin-left: 30px;"></a>
+        <header style="font-size: 16px; color: red;">Your Record already exists.</header>
         <header>Matric Form.</header>
         <hr class="hr">
-        <form style="margin-top: 30px;"  method="post">
-            {% csrf_token %} 
+        <form style="margin-top: 30px;" method="post">
+            {% csrf_token %}
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">ID Card Number</label>
-                    <input type="text" id="idCardNumber" name="idCardNumber" value="{{ idCard_number }}" placeholder="Enter your Id card no" disabled>
-                   
+                    <input type="text" id="idCardNumber" name="idCardNumber" value="{{ result.name }}"
+                        placeholder="Enter your Id card no" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Date of Birth</label>
-                    <input type="text" id="birthDate" name="date_of_birth" value="{{ birth_date }}" placeholder="Enter Date of Birth">
-                    
+                    <input type="text" id="birthDate" name="date_of_birth" value="{{ result.date_of_birth }}"
+                        placeholder="Enter Date of Birth">
+
                 </div>
             </div>
             <!--2nd-->
@@ -47,14 +46,16 @@
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Student Name</label>
-                    <input type="text" name="student_name" value="{{ student_name }}" placeholder="Enter your Name" disabled>
-                   
+                    <input type="text" name="student_name" value="{{ result.student_name }}"
+                        placeholder="Enter your Name" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Father Name</label>
-                    <input type="text" name="father_name" value="{{ father_name }}" placeholder="Enter your Father Name" disabled>
-                    
+                    <input type="text" name="father_name" value="{{ result.father_name }}"
+                        placeholder="Enter your Father Name" disabled>
+
                 </div>
             </div>
             <!--3rd-->
@@ -64,32 +65,35 @@
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Email Address</label>
-                    <input type="text" name="email_address" placeholder="Enter your Email Address">
-                   
+                    <input value="{{result.email_address}}" type="text" name="email_address"
+                        placeholder="Enter your Email Address" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Address</label>
-                    <input type="text" name="address" placeholder="Enter your Address">
-                    
+                    <input value="{{result.address}}" type="text" name="address" placeholder="Enter your Address"
+                        disabled>
+
                 </div>
             </div>
-            
-<!--4th-->
+
+            <!--4th-->
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Phone Number</label>
-                    <input type="text" name="phone_number" placeholder="Enter your Phone no">
-                   
+                    <input value="{{result.phone_number}}" type="text" name="phone_number"
+                        placeholder="Enter your Phone no" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Board</label>
-                    <input type="text" name="board" value="{{ board }}" placeholder="Enter your Board" disabled>
-                    
+                    <input type="text" name="board" value="{{ result.board }}" placeholder="Enter your Board" disabled>
+
                 </div>
             </div>
-           
+
 
             <!--5th-->
 
@@ -97,69 +101,76 @@
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Total Marks</label>
-                    <input type="text" name="total_marks" value="{{ total_marks }}" placeholder="Enter your Total Mark" disabled>
-                   
+                    <input type="text" name="total_marks" value="{{ result.total_marks }}"
+                        placeholder="Enter your Total Mark" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Obtained Marks</label>
-                    <input type="text" name="obtained_marks" value="{{ obtained_marks }}" placeholder="Enter your Obtain Mark" disabled>
-                    
+                    <input type="text" name="obtained_marks" value="{{ result.obtained_marks }}"
+                        placeholder="Enter your Obtain Mark" disabled>
+
                 </div>
             </div>
 
             <!--6Th-->
 
-            
+
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Percentage</label>
-                    <input type="text" name="percentage" value="{{ percentage }}" placeholder="Enter your Percentage" disabled>
-                   
+                    <input type="text" name="percentage" value="{{ result.percentage }}"
+                        placeholder="Enter your Percentage" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">Serial Roll Number</label>
-                    <input type="text" name="roll_no" value="{{ roll_no }}" placeholder="Enter your Serial no/Roll no" disabled>
-                    
+                    <input type="text" name="roll_no" value="{{ result.roll_no }}"
+                        placeholder="Enter your Serial no/Roll no" disabled>
+
                 </div>
             </div>
-            
-        
 
-        <header style="margin-top: 50px;">Fsc Form.</header>
-        <hr class="hr">
-        
+
+
+            <header style="margin-top: 50px;">Fsc Form.</header>
+            <hr class="hr">
+
 
             <!--1st-->
             <div class="dbl-field">
             </div>
-            
+
 
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Fsc Board</label>
-                    <input type="text" name="fsc_board" value="{{ fsc_board }}" placeholder="Enter your Board" disabled>
-                   
+                    <input type="text" name="fsc_board" value="{{ result.fsc_board }}" placeholder="Enter your Board"
+                        disabled>
+
                 </div>
             </div>
 
-<!--2nd-->
+            <!--2nd-->
             <div class="dbl-field">
             </div>
-            
+
 
             <div class="dbl-field">
                 <div class="field">
                     <label for="idCardNumber">Fsc Total Marks</label>
-                    <input type="text" name="fsc_total_marks" value="{{ fsc_total_marks }}" placeholder="Enter your Total Mark" disabled>
-                   
+                    <input type="text" name="fsc_total_marks" value="{{ result.fsc_total_marks }}"
+                        placeholder="Enter your Total Mark" disabled>
+
                 </div>
-            
+
                 <div class="field">
                     <label for="birthDate">FSC Obtained Marks:</label>
-                    <input type="text" name="fsc_obtained_marks" value="{{ fsc_obtained_marks }}" placeholder="Enter your Obtain Mark" disabled>
-                    
+                    <input type="text" name="fsc_obtained_marks" value="{{ result.fsc_obtained_marks }}"
+                        placeholder="Enter your Obtain Mark" disabled>
+
                 </div>
             </div>
 
@@ -168,46 +179,47 @@
 
             <div class="dbl-field">
             </div>
-            
+
 
             <div class="dbl-field">
-            
+
                 <div class="field">
                     <label for="birthDate">FSC Percentage</label>
-                    <input type="text" name="fsc_percentage" value="{{ fsc_percentage }}" placeholder="Enter your Percentage" disabled>
-                    
+                    <input type="text" name="fsc_percentage" value="{{ result.fsc_percentage }}"
+                        placeholder="Enter your Percentage" disabled>
+
                 </div>
             </div>
-        {% if cgpa %}
-        <header style="margin-top: 50px;">University Program.</header>
-        <hr class="hr" style="margin-bottom: 30px;">
+            {% if result.cgpa %}
+            <header style="margin-top: 50px;">University Program.</header>
+            <hr class="hr" style="margin-bottom: 30px;">
 
             <div class="dbl-field">
                 <div class="field">
                     <label for="uniCGPA">CGPA</label>
-                    <input type="text" name="cgpa" value="{{ cgpa }}" disabled>
-                   
+                    <input type="text" name="cgpa" value="{{ result.cgpa }}" disabled>
+
                 </div>
                 <div class="field">
                     <label for="uniProgram">University Master Program</label>
-                    <input type="text" name="uni_master_program" value="{{ university_master_program }}" disabled>
-                   
+                    <input type="text" name="uni_master_program" value="{{ result.university_master_program }}"
+                        disabled>
+
                 </div>
             </div>
             <div class="dbl-field">
                 <div class="field">
                     <label for="uniYear">University Year</label>
-                    <input type="text" name="uni_year" value="{{ univeristy_year }}" disabled>
-                   
+                    <input type="text" name="uni_year" value="{{ result.year }}" disabled>
+
                 </div>
             </div>
             {% endif %}
 
             <div class="button-area">
-               <button type="submit">Submit</button>
-               <button onclick="goBack()" type="button" style="margin-left: 10px; margin-top: 10px;">Cancel</button>
-            </div>
-
+                <button onclick="goBack()" type="button" style="margin-left: 10px;">Cancel</button>
+                    <button type="button" style="margin-left: 10px;"><a href="/logout" style="text-decoration: none; color: white;">Logout</a></button>
+                    </div>
         </form>
     </div>
     <script>

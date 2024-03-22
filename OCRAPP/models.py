@@ -1,9 +1,10 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 # Create your models here.
 
 
 class Matric (models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=105)
     date_of_birth = models.CharField(max_length=100)
     student_name = models.CharField(max_length=100)
@@ -11,7 +12,7 @@ class Matric (models.Model):
     email_address = models.CharField(max_length=100)
     address = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=100, null=True, blank=True)
-    board = models.CharField( max_length=11, null=True, blank=True)
+    board = models.CharField( max_length=150, null=True, blank=True)
     total_marks = models.CharField(max_length=100, null=True, blank=True)
     obtained_marks = models.CharField(max_length=100, null=True, blank=True)
     percentage = models.CharField(max_length=100,null=True, blank=True)

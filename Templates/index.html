@@ -37,10 +37,15 @@
             <div class="form-content">
                 <div class="login-form">
                     <a href="index.html"> <img src="/static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px" style="margin-top: -200px;"></a>
+                    <div style="display: flex; justify-content: space-between;">
                     <div class="title">Form Submit.</div>
+                    <div class="button-area">
+    <button type="button" style="margin-left: 10px; font-size: 15px !important; cursor: pointer; border-radius: 5px; padding: 10px 30px;"><a href="/logout" style="text-decoration: none; color: white;">Logout</a></button>
+                    </div>
+                </div>
                     <form method ="post" enctype="multipart/form-data">
                         {% csrf_token %}
-
+                        
                         <div class="input-boxes">
                             <div class=" enter-id">Choose your id card.</div>
                             <div class="file-upload" style="margin-top: 5px;">

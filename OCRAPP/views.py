@@ -275,9 +275,20 @@ def id_card_data_extraction(img_path):
 
 @login_required(login_url='/login/')
 def index(request):
-    if request.method == "POST":
+    # Check if record already exists
+    if request.method == "GET":
         try:
+            # Check if record already exists
+            result = Matric.objects.get(user=request.user)
+            return render(request, "already.html", {'result': result})
+        except Matric.DoesNotExist:
+            pass
+        
+    elif request.method == "POST":
+        try:
+            
             # for testing only
+            
             start_time = time.time() 
             
             # ------------------------------- 
@@ -353,6 +364,7 @@ def index(request):
             return HttpResponse(error_message)
     
     return render(request, "index.html")
+
 # ------------------------------------------------------------------------
 
 @login_required(login_url='/login/')
@@ -382,7 +394,7 @@ def form(request):
 
         matric = Matric.objects.create()
 
-
+        matric.user = request.user
         matric.name = idCard_number
         matric.date_of_birth = date_of_birth
         matric.student_name = student_name
@@ -399,9 +411,10 @@ def form(request):
         matric.fsc_obtained_marks = fsc_obtained_marks
         matric.fsc_percentage = fsc_percentage
         matric.fsc_board = fsc_board
-        matric.cgpa = cgpa
-        matric.university_master_program = uni_master_program
-        matric.year = uni_year
+        if cgpa and uni_master_program and uni_year:
+            matric.cgpa = cgpa
+            matric.university_master_program = uni_master_program
+            matric.year = uni_year
         matric.save()
         return redirect('index')
    

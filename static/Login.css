@@ -28,6 +28,16 @@ body {
     perspective: 2700px;
 }
 
+.input-style {
+    width: 70%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+    margin-top: 7px;
+}
+
 .container .cover {
     position: absolute;
     top: 0;
@@ -698,7 +708,8 @@ form .button-area {
 
 .error {
     color: red;
-    font-size: 12px;
+    margin-top: 12px;
+    font-size: 15px;
 }
 
 .logged_in_container {

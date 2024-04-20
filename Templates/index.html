@@ -13,31 +13,76 @@
     <link rel="icon" href="static/Images/ocr.png" type="/static/Images/ocr.png" sizes="16x16">
 
     <style>
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 30px;
-            height: 30px;
-            -webkit-animation: spin 2s linear infinite; /* Safari */
-            animation: spin 2s linear infinite;
-            display: none; /* Initially hidden */
+        /* Pre-loader CSS */
+        .page-loader {
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            background-color: rgba(39, 39, 39, 0.8);
+            z-index: 1000;
+
+            .txt {
+                color: #888;
+                text-align: center;
+                top: 50%;
+                position: relative;
+                text-transform: uppercase;
+                letter-spacing: 0.3rem;
+                font-weight: bold;
+                line-height: 1.5;
+            }
         }
-    
-        @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
+
+        /* Spinner animation */
+        .spinner {
+            position: relative;
+            top: 35%;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background-color: #4365D0;
+            border-radius: 100%;
+            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+            animation: sk-scaleout 1.0s infinite ease-in-out;
         }
-    
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        @-webkit-keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0)
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
         }
     </style>
 
 </head>
 
-<body>
+<body onload="hideLoader()">
+    <!-- Loader -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <div class="txt">Loading...</div>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+
     <div class="container">
         <input type="checkbox" id="flip">
         <div class="cover">
@@ -58,25 +103,35 @@
             </div>
         </div>
         <div class="forms">
+
             <div class="form-content">
                 <div class="login-form">
-                    <a href="index.html"> <img src="/static/Images/abasy-uni-logo.png" alt="" width="100px" height="100px" style="margin-top: -200px;"></a>
-                    <div style="display: flex; justify-content: space-between;">
-                    <div class="title">Form Submit.</div>
-                    <div class="button-area">
-    <button type="button" style="margin-left: 10px; font-size: 15px !important; cursor: pointer; border-radius: 5px; padding: 10px 30px;"><a href="/logout" style="text-decoration: none; color: white;">Logout</a></button>
+                    <a href="index.html"> <img src="/static/Images/abasy-uni-logo.png" alt="" width="100px"
+                            height="100px" style="margin-top: -200px;"></a>
+                    <div style="padding-bottom: 30px; margin-top: -10px;">
+                        <p class="success">Welcome Back! <span style="font-weight: bold;">"{{request.user.first_name}}
+                                {{request.user.last_name}}"
+                        </p></span>
                     </div>
-                </div>
-                    <form method ="post" enctype="multipart/form-data">
+                    <div style="display: flex; justify-content: space-between;">
+                        <div class="title">Form Submit.</div>
+                        <div class="button-area">
+                            <button type="button"
+                                style="margin-left: 10px; font-size: 15px !important; cursor: pointer; border-radius: 5px; padding: 10px 30px;"><a
+                                    href="/logout" style="text-decoration: none; color: white;">Logout</a></button>
+                        </div>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
-                        
+
                         <div class="input-boxes">
                             <div class=" enter-id">Choose your id card.</div>
                             <div class="file-upload" style="margin-top: 5px;">
                                 <div class="file-select">
                                     <div class="file-select-button" id="fileName">Choose File</div>
                                     <div class="file-select-name" id="idCard_noFile">No file chosen...</div>
-                                    <input type="file" name="idCard" required id="idCard" onchange="updateIdCardFileName()">
+                                    <input type="file" name="idCard" required id="idCard"
+                                        onchange="updateIdCardFileName()">
                                 </div>
                             </div>
                             <div class=" enter-id" style="margin-top: 10px;">Choose your Matric Sanat.</div>
@@ -84,7 +139,8 @@
                                 <div class="file-select">
                                     <div class="file-select-button" id="fileName">Choose File</div>
                                     <div class="file-select-name" id="matricSanat_noFile">No file chosen...</div>
-                                    <input type="file" name="matricSanat" id="matricSanat" onchange="updateMatricFileName()">
+                                    <input type="file" name="matricSanat" id="matricSanat"
+                                        onchange="updateMatricFileName()">
                                 </div>
                             </div>
                             <div class=" enter-id" style="margin-top: 10px;">Choose your Fsc Sanat.</div>
@@ -92,54 +148,60 @@
                                 <div class="file-select">
                                     <div class="file-select-button" id="fileName">Choose File</div>
                                     <div class="file-select-name" id="fscSanat_noFile">No file chosen...</div>
-                                    <input type="file" name="fscSanat" id="fscSanat" onchange="updateFscSanatFileName()">
+                                    <input type="file" name="fscSanat" id="fscSanat"
+                                        onchange="updateFscSanatFileName()">
                                 </div>
                             </div>
                             <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
-                            <label for="master" class="enter-id">Apply as a Master</label>
-                            <div class="">
-                                <input id="master" type="checkbox" onclick="toggleDivDisplay()">
+                                <label for="master" class="enter-id">Apply as a Master</label>
+                                <div class="">
+                                    <input id="master" type="checkbox" onclick="toggleDivDisplay()">
+                                </div>
                             </div>
-                        </div>
 
-                        <div id="as_master_div_id" class="as_master_div" style="display: none;">
+                            <div id="as_master_div_id" class="as_master_div" style="display: none;">
 
-                        <div>
-                        <div class=" enter-id" style="margin-top: 10px;">Enter CGPA.</div>
-                        <div class="file-upload" style="margin-top: 5px;">
-                        <input class="file-select" type="number" name="cgpa" id="cgpa" placeholder="Enter CGPA" style="width: 100%; padding-left: 10px;">
-                        </div>
-                        </div>
+                                <div>
+                                    <div class=" enter-id" style="margin-top: 10px;">Enter CGPA.</div>
+                                    <div class="file-upload" style="margin-top: 5px;">
+                                        <input class="file-select" type="number" name="cgpa" id="cgpa"
+                                            placeholder="Enter CGPA" style="width: 100%; padding-left: 10px;">
+                                    </div>
+                                </div>
 
-                        <div>
-                        <div class=" enter-id" style="margin-top: 10px;">Enter University Master Program</div>
-                        <div class="file-upload" style="margin-top: 5px;">
-                        <input class="file-select" type="text" name="master_program" id="master_program" placeholder="Enter University Master Program" style="width: 100%; padding-left: 10px;">
-                        </div>
-                        </div>
+                                <div>
+                                    <div class=" enter-id" style="margin-top: 10px;">Enter University Master Program
+                                    </div>
+                                    <div class="file-upload" style="margin-top: 5px;">
+                                        <input class="file-select" type="text" name="master_program" id="master_program"
+                                            placeholder="Enter University Master Program"
+                                            style="width: 100%; padding-left: 10px;">
+                                    </div>
+                                </div>
 
-                        <div>
-                        <div class=" enter-id" style="margin-top: 10px;">Enter Year</div>
-                        <div class="file-upload" style="margin-top: 5px;">
-                        <input class="file-select" type="text" name="user_year" id="user_year" placeholder="Enter Year" style="width: 100%; padding: 0 10px;">
-                        </div>
-                        </div>
+                                <div>
+                                    <div class=" enter-id" style="margin-top: 10px;">Enter Year</div>
+                                    <div class="file-upload" style="margin-top: 5px;">
+                                        <input class="file-select" type="text" name="user_year" id="user_year"
+                                            placeholder="Enter Year" style="width: 100%; padding: 0 10px;">
+                                    </div>
+                                </div>
 
-                        </div>
+                            </div>
 
 
-                        <script>
-                            function toggleDivDisplay() {
-                                var checkbox = document.getElementById("master");
-                                var asMasterDiv = document.getElementById("as_master_div_id");
-                        
-                                if (checkbox.checked) {
-                                    asMasterDiv.style.display = "block";
-                                } else {
-                                    asMasterDiv.style.display = "none";
+                            <script>
+                                function toggleDivDisplay() {
+                                    var checkbox = document.getElementById("master");
+                                    var asMasterDiv = document.getElementById("as_master_div_id");
+
+                                    if (checkbox.checked) {
+                                        asMasterDiv.style.display = "block";
+                                    } else {
+                                        asMasterDiv.style.display = "none";
+                                    }
                                 }
-                            }
-                        </script>
+                            </script>
 
                             <!-- <div class=" enter-id" style="margin-top: 10px;">Choose your Bs Sanat.</div>
                             <div class="file-upload" style="margin-top: 5px;">
@@ -150,8 +212,7 @@
                                 </div>
                             </div> -->
                             <div class="button input-box" style="position: relative;">
-                                <input type="submit" value="Submit" class="submit-btn" onclick="showLoader()"> 
-                                <span style="position: absolute; right: 35%;" class="loader" id="loader"></span>
+                                <input type="submit" value="Submit" class="submit-btn">
                             </div>
                         </div>
                     </form>
@@ -162,58 +223,60 @@
 
 
     <script>
-        function showLoader() {
-            document.getElementById('loader').style.display = 'block'; // Show loader
-        }
-    
-        // Event listener to hide the loader when the page finishes loading
-        window.addEventListener('load', hideLoader);
-    
+
         function hideLoader() {
-            document.getElementById('loader').style.display = 'none'; // Hide loader
+            var loader = document.querySelector('.page-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500); // Hide the loader after 0.5 seconds (sync with the transition duration)
+            }
         }
     </script>
 
 
     <script>
         function updateIdCardFileName() {
-        var fileInput = document.getElementById('idCard');
-        var fileNameDisplay = document.getElementById('idCard_noFile');
+            var fileInput = document.getElementById('idCard');
+            var fileNameDisplay = document.getElementById('idCard_noFile');
 
-        if (fileInput.files.length > 0) {
-            // Update the display with the selected file name
-            fileNameDisplay.textContent = fileInput.files[0].name;
-        } else {
-            // No file chosen, display the default message
-            fileNameDisplay.textContent = 'No file chosen...';
+            if (fileInput.files.length > 0) {
+                // Update the display with the selected file name
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                // No file chosen, display the default message
+                fileNameDisplay.textContent = 'No file chosen...';
+            }
         }
-    }
 
-    function updateMatricFileName() {
-        var fileInput = document.getElementById('matricSanat');
-        var fileNameDisplay = document.getElementById('matricSanat_noFile');
+        function updateMatricFileName() {
+            var fileInput = document.getElementById('matricSanat');
+            var fileNameDisplay = document.getElementById('matricSanat_noFile');
 
-        if (fileInput.files.length > 0) {
-            // Update the display with the selected file name
-            fileNameDisplay.textContent = fileInput.files[0].name;
-        } else {
-            // No file chosen, display the default message
-            fileNameDisplay.textContent = 'No file chosen...';
+            if (fileInput.files.length > 0) {
+                // Update the display with the selected file name
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                // No file chosen, display the default message
+                fileNameDisplay.textContent = 'No file chosen...';
+            }
         }
-    }
 
-    function updateFscSanatFileName() {
-        var fileInput = document.getElementById('fscSanat');
-        var fileNameDisplay = document.getElementById('fscSanat_noFile');
+        function updateFscSanatFileName() {
+            var fileInput = document.getElementById('fscSanat');
+            var fileNameDisplay = document.getElementById('fscSanat_noFile');
 
-        if (fileInput.files.length > 0) {
-            // Update the display with the selected file name
-            fileNameDisplay.textContent = fileInput.files[0].name;
-        } else {
-            // No file chosen, display the default message
-            fileNameDisplay.textContent = 'No file chosen...';
+            if (fileInput.files.length > 0) {
+                // Update the display with the selected file name
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                // No file chosen, display the default message
+                fileNameDisplay.textContent = 'No file chosen...';
+            }
         }
-    }
     </script>
 </body>
+
 </html>

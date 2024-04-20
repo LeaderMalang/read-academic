@@ -1,6 +1,7 @@
 /* Google Font Link */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -25,6 +26,12 @@ body {
     padding: 130px 30px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     perspective: 2700px;
+}
+
+.success {
+    color: #4F7942;
+    margin-top: 12px;
+    font-size: 16px;
 }
 
 .container .cover {
@@ -247,16 +254,20 @@ body {
     .container .cover {
         display: none;
     }
+
     .form-content .login-form,
     .form-content .signup-form {
         width: 100%;
     }
+
     .form-content .signup-form {
         display: none;
     }
+
     .container #flip:checked~.forms .signup-form {
         display: block;
     }
+
     .container #flip:checked~.forms .login-form {
         display: none;
     }
@@ -477,10 +488,13 @@ form .dbl-field {
 .dbl-field .field {
     height: 50px;
     display: flex;
-    flex-direction: column; /* Change the direction to column */
+    flex-direction: column;
+    /* Change the direction to column */
     position: relative;
-    margin-bottom: 13px; /* Add margin between fields */
-    width: 100%; /* Make each field take up the full width */
+    margin-bottom: 13px;
+    /* Add margin between fields */
+    width: 100%;
+    /* Make each field take up the full width */
 }
 
 
@@ -580,30 +594,37 @@ form .button-area {
     .wrapper header {
         text-align: none;
     }
+
     .wrapper form {
         margin: 35px 20px;
     }
+
     form .dbl-field {
         flex-direction: column;
         margin-bottom: 0px;
     }
+
     form .dbl-field .field {
         width: 100%;
         height: 45px;
         margin-bottom: 20px;
     }
+
     form .message textarea {
         resize: none;
     }
+
     form .button-area {
         margin-top: 20px;
         flex-direction: column;
     }
+
     .button-area button {
         width: 100%;
         padding: 11px 0;
         font-size: 16px;
     }
+
     .button-area span {
         margin: 20px 0 0;
         text-align: center;
@@ -647,16 +668,20 @@ form .button-area {
 
 
 .dbl-field .field label {
-    margin-bottom: 5px; /* Add margin between label and input */
+    margin-bottom: 5px;
+    /* Add margin between label and input */
 }
 
 
 
 
 .dbl-field .field input {
-    height: 100%; /* Make the input take up full height of the field */
-    padding: 5px; /* Adjust padding as needed */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    height: 100%;
+    /* Make the input take up full height of the field */
+    padding: 5px;
+    /* Adjust padding as needed */
+    box-sizing: border-box;
+    /* Include padding and border in the element's total width and height */
 }
 
 .dbl-field .field i {
@@ -666,7 +691,7 @@ form .button-area {
     transform: translateY(-50%);
 }
 
-.fa{
+.fa {
     margin-top: 20px;
-    font-size:20px;
+    font-size: 20px;
 }

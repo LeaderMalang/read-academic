@@ -8,9 +8,75 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="static/Images/ocr.png" type="/static/Images/ocr.png" sizes="10x10">
+
+    <style>
+        /* Pre-loader CSS */
+        .page-loader {
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            background-color: rgba(39, 39, 39, 0.8);
+            z-index: 1000;
+
+            .txt {
+                color: #888;
+                text-align: center;
+                top: 50%;
+                position: relative;
+                text-transform: uppercase;
+                letter-spacing: 0.3rem;
+                font-weight: bold;
+                line-height: 1.5;
+            }
+        }
+
+        /* Spinner animation */
+        .spinner {
+            position: relative;
+            top: 35%;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background-color: #4365D0;
+            border-radius: 100%;
+            -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+            animation: sk-scaleout 1.0s infinite ease-in-out;
+        }
+
+        @-webkit-keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0)
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sk-scaleout {
+            0% {
+                -webkit-transform: scale(0);
+                transform: scale(0);
+            }
+
+            100% {
+                -webkit-transform: scale(1.0);
+                transform: scale(1.0);
+                opacity: 0;
+            }
+        }
+    </style>
+    
 </head>
 
-<body>
+<body onload="hideLoader()">
+    <!-- Loader -->
+    <div class="page-loader">
+        <div class="spinner"></div>
+        <div class="txt">Loading...</div>
+    </div>
     {% if user.is_authenticated %}
     <div class="logged_in_container">
         <div class="logged_in_badge" role="alert">
@@ -47,9 +113,9 @@
                         {% csrf_token %}
                         <div class="input-boxes">
                             <div class="enter-id">Username</div>
-                            <input type="text" name="username" required>
+                            <input type="text" class="input-style" name="username" required>
                             <div class="enter-id" style="margin-top: 10px;">Password</div>
-                            <input type="password" name="password" required>
+                            <input class="input-style" type="password" name="password" required>
                             <div class="button input-box">
                                 <input type="submit" value="Login" class="submit-btn">
                             </div>
@@ -63,6 +129,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+        function hideLoader() {
+            var loader = document.querySelector('.page-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                loader.style.transition = 'opacity 0.5s';
+                setTimeout(function() {
+                    loader.style.display = 'none';
+                }, 500); // Hide the loader after 0.5 seconds (sync with the transition duration)
+            }
+        }
+    </script>
 </body>
 
 </html>

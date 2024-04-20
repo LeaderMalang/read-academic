@@ -439,7 +439,7 @@ def app_admin(request):
 
 def login(request):
     if request.user.is_authenticated:
-            return render(request, 'Login.html', {'already_logged_in': True})
+        return render(request, 'Login.html', {'already_logged_in': True})
     
     if request.method == 'POST':
         username = request.POST.get('username')

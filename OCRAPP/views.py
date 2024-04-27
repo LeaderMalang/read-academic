@@ -186,15 +186,25 @@ def matric_data_extraction(img_path):
             raise Exception("Matric image not found or could not be read")
         matric_image_rgb = cv2.cvtColor(matric_image, cv2.COLOR_BGR2RGB)
         matric_result = reader.readtext(matric_image_rgb)
+        
         for index, detection in enumerate(matric_result):
             text = detection[1]
+            print(f'Matric Result: {text}')
             if text.lower() == "roll no":
                 martic_roll_no = matric_result[index+1][1]
             if text.lower() == "roll no.":
                 martic_roll_no = matric_result[index+1][1]
+            if text.lower() == "koll vo.":
+                martic_roll_no = matric_result[index+1][1]
             if text.lower() == "marks (in figures)":
                 matric_obtained_marks = int(matric_result[index+1][1])
                 matric_total_marks = int(matric_result[index+2][1])
+            if text.lower() == "out":
+                if len(matric_result) > index+2 and len(matric_result[index+2]) > 1:
+                    element_to_convert = str(matric_result[index+2][1])
+                    matric_total_marks = int(element_to_convert.rstrip("_"))
+            if text.lower() == "marks":
+                matric_obtained_marks = int(matric_result[index-1][1])
             if text == "TOTAL":
                 matric_total_marks = int(matric_result[index+1][1])
                 matric_obtained_marks = int(matric_result[index+2][1])
@@ -202,6 +212,8 @@ def matric_data_extraction(img_path):
                 martic_board= "board of intermediate and secondary education Islamabad"
             if "rawalpindi" in text.lower():
                 martic_board = "board of intermediate and secondary education rawalpindi"
+            if "faisalabad" in text.lower():
+                martic_board = "board of intermediate and secondary education faisalabad"
 
         if matric_total_marks is not None and matric_total_marks != 0:
             matric_percentage = float((matric_obtained_marks / matric_total_marks) * 100)
@@ -218,28 +230,37 @@ def fsc_data_extraction(img_path):
         if fsc_image is None:
             raise Exception("FSC image not found or could not be read")
 
-        image_height, image_width, _ = fsc_image.shape
-        start_x = 0
-        start_y = (2 * image_height) // 3
-        roi_width = image_width
-        roi_height = image_height // 3
+        # image_height, image_width, _ = fsc_image.shape
+        # start_x = 0
+        # start_y = (2 * image_height) // 3
+        # roi_width = image_width
+        # roi_height = image_height // 3
 
-        fsc_roi_image = fsc_image[start_y:start_y + roi_height,start_x:start_x + roi_width]
-        fsc_image_rgb = cv2.cvtColor(fsc_roi_image, cv2.COLOR_BGR2RGB)
+        # fsc_roi_image = fsc_image[start_y:start_y + roi_height,start_x:start_x + roi_width]
+        fsc_image_rgb = cv2.cvtColor(fsc_image, cv2.COLOR_BGR2RGB)
         fsc_result = reader.readtext(fsc_image_rgb)
 
         for index, detection in enumerate(fsc_result):
             text = detection[1]
+            print(f'FSC Result: {text}')
             if text.lower() == "total marks (in figures)":
                 fsc_obtained_marks = int(fsc_result[index+1][1])
                 fsc_total_marks = int(fsc_result[index+2][1])
             if text.lower() == "total":
                 fsc_total_marks = int(fsc_result[index+1][1])
                 fsc_obtained_marks = int(fsc_result[index+2][1])
+            if text.lower() == "oul":
+                fsc_total_marks = int(fsc_result[index+2][1])
+            if text.lower() == "out":
+                fsc_total_marks = int(fsc_result[index+2][1])
+            if text.lower() == "marks":
+                fsc_obtained_marks = int(fsc_result[index-3][1])
             if "rawalpindi" in text.lower():
                 fsc_board = "board of intermediate and secondary education rawalpindi"
             if "islamabad" in text.lower():
                 fsc_board = "board of intermediate and secondary education islamabad"
+            if "faisalabad" in text.lower():
+                fsc_board = "board of intermediate and secondary education faisalabad"
 
         if fsc_total_marks is not None and fsc_total_marks != 0:
             fsc_percentage = float((fsc_obtained_marks / fsc_total_marks) * 100)

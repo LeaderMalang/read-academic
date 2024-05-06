@@ -209,8 +209,8 @@ def matric_data_extraction(img_path):
                 if len(matric_result) > index+2 and len(matric_result[index+2]) > 1:
                     element_to_convert = str(matric_result[index+2][1])
                     matric_total_marks = int(element_to_convert.rstrip("_"))
-            if text.lower() == "marks":
-                matric_obtained_marks = int(matric_result[index-1][1])
+            # if text.lower() == "marks":
+            #     matric_obtained_marks = int(matric_result[index-1][1])
             if text == "TOTAL":
                 matric_total_marks = int(matric_result[index+1][1])
                 matric_obtained_marks = int(matric_result[index+2][1])
@@ -269,8 +269,8 @@ def fsc_data_extraction(img_path):
                 fsc_total_marks = int(fsc_result[index+2][1])
             if text.lower() == "out":
                 fsc_total_marks = int(fsc_result[index+2][1])
-            if text.lower() == "marks":
-                fsc_obtained_marks = int(fsc_result[index-3][1])
+            # if text.lower() == "marks":
+            #     fsc_obtained_marks = int(fsc_result[index-3][1])
             if "rawalpindi" in text.lower():
                 fsc_board = "board of intermediate and secondary education rawalpindi"
             if "islamabad" in text.lower():

@@ -107,7 +107,7 @@ This refined workflow clarifies the system flow, user roles (Candidate & Admin),
 ``python manage.py migrate``
 
 #### Create admin user
-``python manage.py creatsuperuser``
+``python manage.py createsuperuser``
 
 #### Create admin user
 ``python manage.py runserver``

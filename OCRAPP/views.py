@@ -345,7 +345,7 @@ def index(request):
             ID_CARD_FILE = request.FILES.get('idCard')
             MATRIC_SANAT_FILE = request.FILES.get('matricSanat')
             FSC_SANAT_FILE = request.FILES.get('fscSanat')
-            CGPA = request.POST.get('cgpa')
+            # CGPA = request.POST.get('cgpa')
             UNI_MASTER_PROGRAM = request.POST.get('master_program')
             UNI_YEAR = request.POST.get('user_year')
 

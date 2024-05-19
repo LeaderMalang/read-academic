@@ -152,24 +152,40 @@
                                         onchange="updateFscSanatFileName()">
                                 </div>
                             </div>
-                            <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                            <!-- <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
                                 <label for="master" class="enter-id">Apply as a Master</label>
                                 <div class="">
                                     <input id="master" type="checkbox" onclick="toggleDivDisplay()">
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <div id="as_master_div_id" class="as_master_div" style="display: none;">
+                            <div id="as_master_div_id" class="as_master_div" >
 
                                 <div>
-                                    <div class=" enter-id" style="margin-top: 10px;">Enter CGPA.</div>
+                                    <div class=" enter-id" style="margin-top: 10px;">Select  Program.</div>
                                     <div class="file-upload" style="margin-top: 5px;">
-                                        <input class="file-select" type="number" name="cgpa" id="cgpa"
+                                        <select required ="file-select" name="master_program" id="cgpa"
                                             placeholder="Enter CGPA" style="width: 100%; padding-left: 10px;">
+                                            <option value="BS Accounting and Finance">BS Accounting and Finance
+                                                </option>
+
+
+                                                <option value="BS Computer Science"> BS Computer Science</option>
+                                                <option value="BS Digital Marketing"> BS Digital Marketing</option>
+                                                <option value="BS English (Language and Literature)"> BS English (Language and Literature)</option>
+                                                <option value="BS Human Nutrition and Dietetics">  BS Human Nutrition and Dietetics</option>
+                                                <option value="BS Medical Lab Technology ">  BS Medical Lab Technology </option>
+                                                <option value="BS Operation Theater Technology">  BS Operation Theater Technology </option>
+                                                <option value="BS Psychology"> BS Psychology</option>
+                                                <option value="BS   Radiology Technology ">BS   Radiology Technology </option>
+                                                <option value="BS Vision Sciences (Optometry)">  BS Vision Sciences (Optometry) </option>
+                                                <option value="Bachelor's of Business Administration"> Bachelor's of Business Administration </option>
+                                                <option value="Doctor of Physical Therapy">Doctor of Physical Therapy </option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div>
+                                <!-- <div>
                                     <div class=" enter-id" style="margin-top: 10px;">Enter University Master Program
                                     </div>
                                     <div class="file-upload" style="margin-top: 5px;">
@@ -177,12 +193,12 @@
                                             placeholder="Enter University Master Program"
                                             style="width: 100%; padding-left: 10px;">
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div>
                                     <div class=" enter-id" style="margin-top: 10px;">Enter Year</div>
                                     <div class="file-upload" style="margin-top: 5px;">
-                                        <input class="file-select" type="text" name="user_year" id="user_year"
+                                        <input class="file-select" type="text" required name="user_year" id="user_year"
                                             placeholder="Enter Year" style="width: 100%; padding: 0 10px;">
                                     </div>
                                 </div>

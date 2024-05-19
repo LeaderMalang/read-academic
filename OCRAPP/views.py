@@ -263,7 +263,7 @@ def fsc_data_extraction(img_path):
                 fsc_obtained_marks = int(fsc_result[index-1][1])
                 fsc_total_marks = int(fsc_result[index-2][1])
             if text.lower() == "total":
-                fsc_total_marks = int(fsc_result[index+3][1])
+                fsc_total_marks = int(fsc_result[index+1][1])
                 fsc_obtained_marks = int(fsc_result[index+2][1])
             if text.lower() == "oul":
                 fsc_total_marks = int(fsc_result[index+2][1])

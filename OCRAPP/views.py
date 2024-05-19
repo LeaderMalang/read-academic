@@ -262,7 +262,12 @@ def fsc_data_extraction(img_path):
             if text.lower() == "total marks  (in figures)":
                 fsc_obtained_marks = int(fsc_result[index-1][1])
                 fsc_total_marks = int(fsc_result[index-2][1])
-            if text.lower() == "total":
+            if text.lower()=="total" and fsc_board=="board of intermediate and secondary education rawalpindi":
+                
+                fsc_total_marks = int(fsc_result[index+3][1])
+                
+                fsc_obtained_marks = int(fsc_result[index+2][1])
+            if text.lower() == "total" and fsc_board=="board of intermediate and secondary education islamabad":
                 fsc_total_marks = int(fsc_result[index+1][1])
                 fsc_obtained_marks = int(fsc_result[index+2][1])
             if text.lower() == "oul":

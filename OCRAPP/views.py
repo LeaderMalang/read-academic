@@ -311,13 +311,13 @@ def id_card_data_extraction(img_path):
         for index, detection in enumerate(id_card_result):
             text = detection[1]
             print(text)
-            if text.lower() == "identity number":
+            if text.lower()[:2] == "id":
                 idCard_number = id_card_result[index + 2][1]
-            if text.lower() == "identity number":
+            if text.lower()[:2] == "id":
                 date_of_birth = id_card_result[index + 3][1]
             if text.lower() == "name":
                 student_name = id_card_result[index + 1][1]
-            if text.lower() == "father name":
+            if text.lower()[:2] == "fa":
                 father_name = id_card_result[index + 1][1]
     
     print("Job Done")
@@ -345,7 +345,7 @@ def index(request):
             ID_CARD_FILE = request.FILES.get('idCard')
             MATRIC_SANAT_FILE = request.FILES.get('matricSanat')
             FSC_SANAT_FILE = request.FILES.get('fscSanat')
-            # CGPA = request.POST.get('cgpa')
+            CGPA = request.POST.get('cgpa')
             UNI_MASTER_PROGRAM = request.POST.get('master_program')
             UNI_YEAR = request.POST.get('user_year')
 
@@ -460,8 +460,8 @@ def form(request):
         matric.fsc_obtained_marks = fsc_obtained_marks
         matric.fsc_percentage = fsc_percentage
         matric.fsc_board = fsc_board
-        if cgpa and uni_master_program and uni_year:
-            matric.cgpa = cgpa
+        if uni_master_program and uni_year:
+            # matric.cgpa = cgpa
             matric.university_master_program = uni_master_program
             matric.year = uni_year
         matric.save()

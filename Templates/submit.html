@@ -243,18 +243,14 @@
                     
                 </div>
             </div>
-        {% if cgpa %}
+        
         <header style="margin-top: 50px;">University Program.</header>
         <hr class="hr" style="margin-bottom: 30px;">
 
             <div class="dbl-field">
+                
                 <div class="field">
-                    <label for="uniCGPA">CGPA</label>
-                    <input type="text" name="cgpa" value="{{ cgpa }}" disabled>
-                   
-                </div>
-                <div class="field">
-                    <label for="uniProgram">University Master Program</label>
+                    <label for="uniProgram">University BS Program</label>
                     <input type="text" name="uni_master_program" value="{{ university_master_program }}" disabled>
                    
                 </div>
@@ -266,7 +262,7 @@
                    
                 </div>
             </div>
-            {% endif %}
+            
 
             <div class="button-area">
                <button type="submit" style="margin-bottom: 10px;">Submit</button>
